@@ -47,8 +47,7 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
-
-    for (let i = 0; i < conversations.length; i++) {
+    for (let i = conversations.length-1; i>=0; i--) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
@@ -72,7 +71,6 @@ router.get("/", async (req, res, next) => {
       convoJSON.latestMessageText = convoJSON.messages[0].text;
       conversations[i] = convoJSON;
     }
-
     res.json(conversations);
   } catch (error) {
     next(error);
