@@ -47,7 +47,6 @@ router.get("/", async (req, res, next) => {
         },
       ],
     });
-    console.log(conversations)
     for (let i = conversations.length-1; i>=0; i--) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
