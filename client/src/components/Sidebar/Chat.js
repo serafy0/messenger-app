@@ -4,6 +4,9 @@ import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
+import socket from "../../socket";
+import {fetchConversations} from "../../store/utils/thunkCreators";
+import axios from "axios";
 
 const styles = {
   root: {
@@ -21,12 +24,18 @@ const styles = {
 
 class Chat extends Component {
   handleClick = async (conversation) => {
+    await  axios.put("/api/messages/read",{conversationId:this.props.conversation.id}).then(()=>     socket.emit("seen")
+     )
     await this.props.setActiveChat(conversation.otherUser.username);
+    this.props.fetchConversations()
+
   };
 
   render() {
     const { classes } = this.props;
     const otherUser = this.props.conversation.otherUser;
+    this.props.conversation.unread =this.props.conversation.messages.filter((m)=>(m.seen===false&&m.senderId===otherUser.id)).length
+
     return (
       <Box
         onClick={() => this.handleClick(this.props.conversation)}
@@ -47,9 +56,15 @@ class Chat extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
-      dispatch(setActiveChat(id));
+    dispatch(setActiveChat(id));
     },
-  };
+
+        fetchConversations: () => {
+      dispatch(fetchConversations());
+    },
+
+
+    };
 };
 
 export default connect(null, mapDispatchToProps)(withStyles(styles)(Chat));
