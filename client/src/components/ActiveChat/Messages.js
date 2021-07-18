@@ -8,14 +8,13 @@ const Messages = (props) => {
   const sentMessages = messages.filter(message => message.senderId === userId);
 
   const lastMessageSeen = sentMessages.find((message,index) => message.seen && !sentMessages[index+1]?.seen);
-
   return (
     <Box>
       {messages.map((message) => {
         const time = moment(message.createdAt).format("h:mm");
-
+        const isLastMessageSeen =(lastMessageSeen&&lastMessageSeen===message.id)
         return message.senderId === userId ? (
-          <SenderBubble key={message.id} dataKey={message.id} seen={seen} text={message.text} time={time} otherUser={otherUser} />
+          <SenderBubble key={message.id} dataKey={message.id} islastMessageSeen={isLastMessageSeen} text={message.text} time={time} otherUser={otherUser} />
         ) : (
             <OtherUserBubble key={message.id}  text={message.text} time={time} otherUser={otherUser} />
         );

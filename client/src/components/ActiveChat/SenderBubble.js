@@ -31,28 +31,17 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Seen =(props)=>{
-  const classes = useStyles();
-  const {seen,dataKey,otherUser}= props
-  if(seen&&seen.id===dataKey){
-
-    return <Avatar alt={otherUser.username} src={otherUser.photoUrl} className={classes.small}></Avatar>
-  }
-  else return ""
-
-}
-
 
 const SenderBubble = (props) => {
   const classes = useStyles();
-  const { time, text,seen, dataKey,otherUser} = props;
+  const { time, text,islastMessageSeen, dataKey, otherUser} = props;
   return (
     <Box className={classes.root}>
       <Typography className={classes.date}>{time}</Typography>
       <Box className={classes.bubble}>
         <Typography className={classes.text}>{text}</Typography>
       </Box>
-      {lastMessageSeen && <Avatar alt={otherUser.username} src={otherUser.photoUrl} className={classes.small}/>}
+      {islastMessageSeen && <Avatar alt={otherUser.username} src={otherUser.photoUrl} className={classes.small}/>}
 
     </Box>
   );
