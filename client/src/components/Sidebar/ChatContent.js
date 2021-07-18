@@ -58,7 +58,7 @@ const ChatContent = (props) => {
           {latestMessageText}
         </Typography>
       </Box>
-      <UnRead badgeContent={unread!==0?unread:""} color="primary">{unread!==0?unread:""}</UnRead>
+      {unread > 0 && <Badge badgeContent={unread} color="primary"/>
     </Box>
   );
 };
