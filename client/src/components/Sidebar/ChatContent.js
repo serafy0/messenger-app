@@ -40,14 +40,6 @@ const ChatContent = (props) => {
   const { conversation } = props;
   const { latestMessageText, otherUser,unread } = conversation;
 
-  const UnRead = (props)=>{
-    if(unread>0){
-      return <Badge badgeContent={unread} color="primary"></Badge>
-
-    }else{
-      return ""
-    }
-  }
   return (
     <Box className={classes.root}>
       <Box>
