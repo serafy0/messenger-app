@@ -5,10 +5,9 @@ import moment from "moment";
 
 const Messages = (props) => {
   const { messages, otherUser, userId } = props;
-  let sent = messages.filter((a)=> a.senderId===userId
-  )
+  const sentMessages = messages.filter(message => message.senderId === userId);
 
-  let seen= sent.find((a,index)=>(a.seen&&(sent[index+1]==undefined||!sent[index+1].seen)))
+  const lastMessageSeen = sentMessages.find((message,index) => message.seen && !sentMessages[index+1]?.seen);
 
   return (
     <Box>
