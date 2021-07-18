@@ -1,6 +1,6 @@
 import axios from "axios";
 import socket from "../../socket";
-import {
+import conversations, {
   gotConversations,
   addConversation,
   setNewMessage,
@@ -118,3 +118,12 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const markConversationAsRead = (conversation)=> async (dispatch)=>{
+  if(conversation.messages.length>0) {
+
+    await axios.put("/api/messages/read", {conversationId: conversation.id})
+  }
+
+
+}
