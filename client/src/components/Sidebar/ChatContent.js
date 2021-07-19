@@ -17,12 +17,15 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 12,
     color: "#9CADC8",
     letterSpacing: -0.17,
+    fontWeight: "bold"
   },
   notification: {
     height: 20,
     width: 20,
+    marginTop:20,
+    marginBottom:20,
     backgroundColor: "#3F92FF",
-    marginRight: 10,
+    marginRight: 30,
     color: "white",
     fontSize: 10,
     letterSpacing: -0.5,
@@ -46,11 +49,14 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography className={classes.previewText}>
+        <Typography style={unread>0?{fontWeight:"bolder", color:"black"}:null} className={classes.previewText}>
           {latestMessageText}
         </Typography>
       </Box>
-      {unread > 0 && <Badge badgeContent={unread} color="primary"/>}
+      {unread > 0 && <Typography style={unread>9?{"width":30}:null} className={classes.notification}>
+        {unread}
+      </Typography>
+      }
     </Box>
   );
 };
