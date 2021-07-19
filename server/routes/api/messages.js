@@ -65,8 +65,9 @@ router.put("/read",async (req,res)=>{
         where: {
           [Op.and]: [
             { conversationId: conversationId },
-            { senderId: {[Op.not]:userId }}]
-
+            { senderId: {[Op.not]:userId }},
+            {seen:false}
+          ]
         },
         returning:true
 
