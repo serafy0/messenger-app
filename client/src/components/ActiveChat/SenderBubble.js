@@ -26,8 +26,8 @@ const useStyles = makeStyles(() => ({
     borderRadius: "10px 10px 0 10px"
   },
   small: {
-    height: "33px",
-    width: "33px"
+    height: "19.35px",
+    width: "20px"
   },
 }));
 
