@@ -4,7 +4,7 @@ import conversations, {
   gotConversations,
   addConversation,
   setNewMessage,
-  setSearchedUsers,
+  setSearchedUsers, updateConversationAsSeen,
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -123,6 +123,12 @@ export const markConversationAsRead = (conversation)=> async (dispatch)=>{
   if(conversation.messages.length>0) {
 
     await axios.put("/api/messages/read", {conversationId: conversation.id})
+
+    dispatch(updateConversationAsSeen(conversation.otherUser.id,conversation.id))
+    socket.emit("seen",{
+      userId:conversation.otherUser.id,
+      conversationId:conversation.id
+    })
   }
 
 

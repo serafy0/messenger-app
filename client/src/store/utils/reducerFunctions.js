@@ -84,3 +84,24 @@ export const addNewConvoToStore = (state, recipientId, message) => {
     }
   });
 };
+
+export const updateConvoToStore= (state,userId,conversationId)=>{
+  return state.map((convo) => {
+    if (convo.id === conversationId) {
+      if(userId===convo.otherUser.id){
+        convo.unread =0
+      }
+      return  {...convo,
+        messages: convo.messages.map((m)=>{
+          if(m.senderId ===userId&&m.seen===false){
+
+            return {...m, seen:true}
+          }
+          return m;
+        })}
+    } else {
+      return convo;
+    }
+
+  })
+};
