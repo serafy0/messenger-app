@@ -25,14 +25,12 @@ class Chat extends Component {
     await this.props.markConversationAsRead(conversation)
 
     await this.props.setActiveChat(conversation.otherUser.username);
-    // this.props.fetchConversations()
 
   };
 
   render() {
     const { classes } = this.props;
     const otherUser = this.props.conversation.otherUser;
-    this.props.conversation.unread =this.props.conversation.messages.filter((m)=>(m.seen===false&&m.senderId===otherUser.id)).length
 
     return (
       <Box
@@ -60,11 +58,9 @@ const mapDispatchToProps = (dispatch) => {
         fetchConversations: () => {
       dispatch(fetchConversations());
     },
-    markConversationAsRead:(conversation)=>{
-      dispatch(markConversationAsRead(conversation))
-    }
-
-
+    markConversationAsRead: async (conversation)=>{
+     await dispatch(markConversationAsRead(conversation))
+    },
     };
 };
 
