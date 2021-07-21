@@ -4,7 +4,8 @@ import conversations, {
   gotConversations,
   addConversation,
   setNewMessage,
-  setSearchedUsers, updateConversationAsSeen,
+  setSearchedUsers,
+  updateConversationAsSeen
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -88,7 +89,7 @@ const sendMessage = (data, body) => {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
-    seen:data.seen
+    seen: data.seen
   });
 };
 
@@ -119,17 +120,18 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
   }
 };
 
-export const markConversationAsRead = (conversation)=> async (dispatch)=>{
-  if(conversation.messages.length>0) {
+export const markConversationAsRead = (conversation) => async (dispatch) => {
+  if (conversation.messages.length > 0) {
+    await axios.put("/api/conversations/read", {
+      conversationId: conversation.id
+    });
 
-    await axios.put("/api/conversations/read", {conversationId: conversation.id})
-
-    dispatch(updateConversationAsSeen(conversation.otherUser.id,conversation.id))
-    socket.emit("seen",{
-      userId:conversation.otherUser.id,
-      conversationId:conversation.id
-    })
+    dispatch(
+      updateConversationAsSeen(conversation.otherUser.id, conversation.id)
+    );
+    socket.emit("seen", {
+      userId: conversation.otherUser.id,
+      conversationId: conversation.id
+    });
   }
-
-
-}
+};

@@ -3,7 +3,7 @@ import { Box, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { Search, Chat, CurrentUser } from "./index.js";
-import {wrapMapToPropsConstant} from "react-redux/lib/connect/wrapMapToProps";
+import { wrapMapToPropsConstant } from "react-redux/lib/connect/wrapMapToProps";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -31,10 +31,18 @@ const Sidebar = (props) => {
       <Typography className={classes.title}>Chats</Typography>
       <Search handleChange={handleChange} />
       {conversations
-        .filter((conversation) => conversation.otherUser.username.includes(searchTerm))
+        .filter((conversation) =>
+          conversation.otherUser.username.includes(searchTerm)
+        )
         .map((conversation) => {
-          return <Chat conversation={conversation} key={conversation.otherUser.username} />;
-        }).reverse()}
+          return (
+            <Chat
+              conversation={conversation}
+              key={conversation.otherUser.username}
+            />
+          );
+        })
+        .reverse()}
     </Box>
   );
 };
