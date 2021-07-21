@@ -90,9 +90,12 @@ export const updateConvoToStore= (state,userId,conversationId)=>{
     if (convo.id === conversationId) {
       if(userId===convo.otherUser.id){
         convo.unread =0
+      } else {
+        convo.idOfLastMessageSeen = convo.messages[convo.messages.length - 1].id
+
       }
       return  {...convo,
-        messages: convo.messages.map((m)=>{
+        messages: convo.messages.map((m,index)=>{
           if(m.senderId ===userId&&m.seen===false){
 
             return {...m, seen:true}

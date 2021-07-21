@@ -83,6 +83,21 @@ router.get("/", async (req, res, next) => {
             }
       })
 
+      const lastMessageSeen = await Message.findOne({
+        where: {
+          [Op.and]: [
+            {senderId: userId,},
+            {seen: true},
+            {conversationId: convoJSON.id}
+          ]
+
+        },
+        order: [['updatedAt', 'DESC']],
+      });
+
+      if (lastMessageSeen) {
+        convoJSON.idOfLastMessageSeen = lastMessageSeen.id
+      }
       conversations[i] = convoJSON;
     }
     res.json(conversations.reverse());
