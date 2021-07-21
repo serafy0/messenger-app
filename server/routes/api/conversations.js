@@ -16,38 +16,38 @@ router.get("/", async (req, res, next) => {
       where: {
         [Op.or]: {
           user1Id: userId,
-          user2Id: userId,
-        },
+          user2Id: userId
+        }
       },
       attributes: ["id"],
       order: [[Message, "createdAt", "DESC"]],
       include: [
-        { model: Message, order: ["createdAt", "DESC"] },
+        { model: Message, order: ["createdAt", "ASC"] },
         {
           model: User,
           as: "user1",
           where: {
             id: {
-              [Op.not]: userId,
-            },
+              [Op.not]: userId
+            }
           },
           attributes: ["id", "username", "photoUrl"],
-          required: false,
+          required: false
         },
         {
           model: User,
           as: "user2",
           where: {
             id: {
-              [Op.not]: userId,
-            },
+              [Op.not]: userId
+            }
           },
           attributes: ["id", "username", "photoUrl"],
-          required: false,
-        },
-      ],
+          required: false
+        }
+      ]
     });
-    for (let i = conversations.length-1; i>=0; i--) {
+    for (let i = 0; i <= conversations.length - 1; i++) {
       const convo = conversations[i];
       const convoJSON = convo.toJSON();
 
@@ -69,12 +69,76 @@ router.get("/", async (req, res, next) => {
 
       // set properties for notification count and latest message preview
       convoJSON.latestMessageText = convoJSON.messages[0].text;
+      convoJSON.messages.reverse();
+      convoJSON.unreadCount = await Message.count({
+        where: {
+          [Op.and]: [
+            {
+              senderId: convoJSON.otherUser.id
+            },
+            { seen: false },
+            { conversationId: convoJSON.id }
+          ]
+        }
+      });
+
+      const lastMessageSeen = await Message.findOne({
+        where: {
+          [Op.and]: [
+            { senderId: userId },
+            { seen: true },
+            { conversationId: convoJSON.id }
+          ]
+        },
+        order: [["updatedAt", "DESC"]]
+      });
+
+      if (lastMessageSeen) {
+        convoJSON.idOfLastMessageSeen = lastMessageSeen.id;
+      }
       conversations[i] = convoJSON;
     }
-    res.json(conversations);
+    res.json(conversations.reverse());
   } catch (error) {
     next(error);
   }
+});
+
+router.put("/read", async (req, res) => {
+  const { conversationId } = req.body;
+  const userId = req.user.id;
+
+  if (!req.user) {
+    return res.sendStatus(401);
+  }
+
+  if (!conversationId) {
+    return res.sendStatus(400);
+  }
+
+  const conversation = await Conversation.findByPk(conversationId);
+  if (!conversation) {
+    return res.sendStatus(403);
+  }
+  if (userId !== conversation.user1Id && userId !== conversation.user2Id) {
+    return res.sendStatus(403);
+  }
+
+  const seenMessages = await Message.update(
+    { seen: true },
+    {
+      where: {
+        [Op.and]: [
+          { conversationId: conversationId },
+          { senderId: { [Op.not]: userId } },
+          { seen: false }
+        ]
+      },
+      returning: true
+    }
+  );
+
+  return res.sendStatus(204);
 });
 
 module.exports = router;

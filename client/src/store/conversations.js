@@ -4,6 +4,7 @@ import {
   addSearchedUsersToStore,
   removeOfflineUserFromStore,
   addMessageToStore,
+  updateConvoToStore
 } from "./utils/reducerFunctions";
 
 // ACTIONS
@@ -15,47 +16,48 @@ const REMOVE_OFFLINE_USER = "REMOVE_OFFLINE_USER";
 const SET_SEARCHED_USERS = "SET_SEARCHED_USERS";
 const CLEAR_SEARCHED_USERS = "CLEAR_SEARCHED_USERS";
 const ADD_CONVERSATION = "ADD_CONVERSATION";
+const UPDATE_CONVERSATION = "UPDATE_CONVERSATION";
 
 // ACTION CREATORS
 
 export const gotConversations = (conversations) => {
   return {
     type: GET_CONVERSATIONS,
-    conversations,
+    conversations
   };
 };
 
 export const setNewMessage = (message, sender) => {
   return {
     type: SET_MESSAGE,
-    payload: { message, sender: sender || null },
+    payload: { message, sender: sender || null }
   };
 };
 
 export const addOnlineUser = (id) => {
   return {
     type: ADD_ONLINE_USER,
-    id,
+    id
   };
 };
 
 export const removeOfflineUser = (id) => {
   return {
     type: REMOVE_OFFLINE_USER,
-    id,
+    id
   };
 };
 
 export const setSearchedUsers = (users) => {
   return {
     type: SET_SEARCHED_USERS,
-    users,
+    users
   };
 };
 
 export const clearSearchedUsers = () => {
   return {
-    type: CLEAR_SEARCHED_USERS,
+    type: CLEAR_SEARCHED_USERS
   };
 };
 
@@ -63,7 +65,14 @@ export const clearSearchedUsers = () => {
 export const addConversation = (recipientId, newMessage) => {
   return {
     type: ADD_CONVERSATION,
-    payload: { recipientId, newMessage },
+    payload: { recipientId, newMessage }
+  };
+};
+
+export const updateConversationAsSeen = (userId, conversationId) => {
+  return {
+    type: UPDATE_CONVERSATION,
+    payload: { userId, conversationId }
   };
 };
 
@@ -90,6 +99,12 @@ const reducer = (state = [], action) => {
         state,
         action.payload.recipientId,
         action.payload.newMessage
+      );
+    case UPDATE_CONVERSATION:
+      return updateConvoToStore(
+        state,
+        action.payload.userId,
+        action.payload.conversationId
       );
     default:
       return state;

@@ -4,6 +4,10 @@ import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
+import {
+  fetchConversations,
+  markConversationAsRead
+} from "../../store/utils/thunkCreators";
 
 const styles = {
   root: {
@@ -14,19 +18,22 @@ const styles = {
     display: "flex",
     alignItems: "center",
     "&:hover": {
-      cursor: "grab",
-    },
-  },
+      cursor: "grab"
+    }
+  }
 };
 
 class Chat extends Component {
   handleClick = async (conversation) => {
+    await this.props.markConversationAsRead(conversation);
+
     await this.props.setActiveChat(conversation.otherUser.username);
   };
 
   render() {
     const { classes } = this.props;
     const otherUser = this.props.conversation.otherUser;
+
     return (
       <Box
         onClick={() => this.handleClick(this.props.conversation)}
@@ -49,6 +56,13 @@ const mapDispatchToProps = (dispatch) => {
     setActiveChat: (id) => {
       dispatch(setActiveChat(id));
     },
+
+    fetchConversations: () => {
+      dispatch(fetchConversations());
+    },
+    markConversationAsRead: async (conversation) => {
+      await dispatch(markConversationAsRead(conversation));
+    }
   };
 };
 

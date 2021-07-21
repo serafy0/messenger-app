@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography } from "@material-ui/core";
+import { Box, Typography, Badge } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -7,22 +7,25 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "space-between",
     marginLeft: 20,
-    flexGrow: 1,
+    flexGrow: 1
   },
   username: {
     fontWeight: "bold",
-    letterSpacing: -0.2,
+    letterSpacing: -0.2
   },
-  previewText: {
+  previewText: (props) => ({
     fontSize: 12,
-    color: "#9CADC8",
+    color: props.previewTextColor,
     letterSpacing: -0.17,
-  },
-  notification: {
+    fontWeight: "bold"
+  }),
+  notification: (props) => ({
     height: 20,
-    width: 20,
+    width: props.notificationWidth,
+    marginTop: 20,
+    marginBottom: 20,
     backgroundColor: "#3F92FF",
-    marginRight: 10,
+    marginRight: 30,
     color: "white",
     fontSize: 10,
     letterSpacing: -0.5,
@@ -30,15 +33,16 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
-  },
+    borderRadius: 10
+  })
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
-
   const { conversation } = props;
-  const { latestMessageText, otherUser } = conversation;
+  const { latestMessageText, otherUser, unreadCount } = conversation;
+  const notificationWidth = unreadCount > 9 ? 30 : 20;
+  const previewTextColor = unreadCount > 0 ? "black" : "#9CADC8";
+  const classes = useStyles({ notificationWidth, previewTextColor });
 
   return (
     <Box className={classes.root}>
@@ -50,6 +54,9 @@ const ChatContent = (props) => {
           {latestMessageText}
         </Typography>
       </Box>
+      {unreadCount > 0 && (
+        <Typography className={classes.notification}>{unreadCount}</Typography>
+      )}
     </Box>
   );
 };

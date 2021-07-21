@@ -1,10 +1,11 @@
 import axios from "axios";
 import socket from "../../socket";
-import {
+import conversations, {
   gotConversations,
   addConversation,
   setNewMessage,
   setSearchedUsers,
+  updateConversationAsSeen
 } from "../conversations";
 import { gotUser, setFetchingStatus } from "../user";
 
@@ -88,6 +89,7 @@ const sendMessage = (data, body) => {
     message: data.message,
     recipientId: body.recipientId,
     sender: data.sender,
+    seen: data.seen
   });
 };
 
@@ -115,5 +117,21 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
     dispatch(setSearchedUsers(data));
   } catch (error) {
     console.error(error);
+  }
+};
+
+export const markConversationAsRead = (conversation) => async (dispatch) => {
+  if (conversation.messages.length > 0) {
+    await axios.put("/api/conversations/read", {
+      conversationId: conversation.id
+    });
+
+    dispatch(
+      updateConversationAsSeen(conversation.otherUser.id, conversation.id)
+    );
+    socket.emit("seen", {
+      userId: conversation.otherUser.id,
+      conversationId: conversation.id
+    });
   }
 };

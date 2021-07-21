@@ -14,14 +14,14 @@ const styles = {
     letterSpacing: 0,
     display: "flex",
     justifyContent: "center",
-    marginBottom: 20,
+    marginBottom: 20
   },
   input: {
     "&::placeholder": {
       color: "#ADC0DE",
-      opacity: 1,
-    },
-  },
+      opacity: 1
+    }
+  }
 };
 
 class Search extends Component {
