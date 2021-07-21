@@ -13,15 +13,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     letterSpacing: -0.2,
   },
-  previewText: {
+  previewText: props=> ({
     fontSize: 12,
-    color: "#9CADC8",
+    color: props.previewTextColor ,
     letterSpacing: -0.17,
     fontWeight: "bold"
-  },
-  notification: {
+  }),
+  notification: props=> ({
     height: 20,
-    width: 20,
+    width: props.notificationWidth,
     marginTop:20,
     marginBottom:20,
     backgroundColor: "#3F92FF",
@@ -34,14 +34,17 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
-  },
+  }),
 }));
 
 const ChatContent = (props) => {
-  const classes = useStyles();
 
-  const { conversation } = props;
-  const { latestMessageText, otherUser,unread } = conversation;
+  const {conversation} = props;
+  const {latestMessageText, otherUser, unreadCount} = conversation;
+  const notificationWidth = unreadCount > 9 ? 30 : 20
+  const previewTextColor = unreadCount > 0 ? "black" : "#9CADC8"
+  const classes = useStyles({notificationWidth, previewTextColor});
+
 
   return (
     <Box className={classes.root}>
@@ -49,12 +52,12 @@ const ChatContent = (props) => {
         <Typography className={classes.username}>
           {otherUser.username}
         </Typography>
-        <Typography style={unread>0?{fontWeight:"bolder", color:"black"}:null} className={classes.previewText}>
+        <Typography className={classes.previewText}>
           {latestMessageText}
         </Typography>
       </Box>
-      {unread > 0 && <Typography style={unread>9?{"width":30}:null} className={classes.notification}>
-        {unread}
+      {unreadCount > 0 && <Typography className={classes.notification}>
+        {unreadCount}
       </Typography>
       }
     </Box>
