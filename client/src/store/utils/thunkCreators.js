@@ -122,7 +122,7 @@ export const searchUsers = (searchTerm) => async (dispatch) => {
 export const markConversationAsRead = (conversation)=> async (dispatch)=>{
   if(conversation.messages.length>0) {
 
-    await axios.put("/api/messages/read", {conversationId: conversation.id})
+    await axios.put("/api/conversations/read", {conversationId: conversation.id})
 
     dispatch(updateConversationAsSeen(conversation.otherUser.id,conversation.id))
     socket.emit("seen",{

@@ -106,4 +106,46 @@ router.get("/", async (req, res, next) => {
   }
 });
 
+
+router.put("/read", async (req, res) => {
+  const {conversationId} = req.body
+  const userId = req.user.id
+
+  if (!req.user) {
+    return res.sendStatus(401);
+  }
+
+  if (!conversationId) {
+    return res.sendStatus(400)
+  }
+
+  const conversation = await Conversation.findByPk(conversationId)
+  if (!conversation) {
+    return res.sendStatus(403)
+
+  }
+  if (userId !== conversation.user1Id && userId !== conversation.user2Id) {
+    return res.sendStatus(403)
+
+  }
+
+  const seenMessages = await Message.update({seen: true},
+      {
+        where: {
+          [Op.and]: [
+            {conversationId: conversationId},
+            {senderId: {[Op.not]: userId}},
+            {seen: false}
+          ]
+        },
+        returning: true
+      },
+  )
+
+  return res.sendStatus(204)
+
+
+})
+
+
 module.exports = router;
