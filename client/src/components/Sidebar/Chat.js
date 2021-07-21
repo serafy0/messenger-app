@@ -4,7 +4,10 @@ import { BadgeAvatar, ChatContent } from "../Sidebar";
 import { withStyles } from "@material-ui/core/styles";
 import { setActiveChat } from "../../store/activeConversation";
 import { connect } from "react-redux";
-import {fetchConversations, markConversationAsRead} from "../../store/utils/thunkCreators";
+import {
+  fetchConversations,
+  markConversationAsRead
+} from "../../store/utils/thunkCreators";
 
 const styles = {
   root: {
@@ -15,17 +18,16 @@ const styles = {
     display: "flex",
     alignItems: "center",
     "&:hover": {
-      cursor: "grab",
-    },
-  },
+      cursor: "grab"
+    }
+  }
 };
 
 class Chat extends Component {
   handleClick = async (conversation) => {
-    await this.props.markConversationAsRead(conversation)
+    await this.props.markConversationAsRead(conversation);
 
     await this.props.setActiveChat(conversation.otherUser.username);
-
   };
 
   render() {
@@ -52,16 +54,16 @@ class Chat extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     setActiveChat: (id) => {
-    dispatch(setActiveChat(id));
+      dispatch(setActiveChat(id));
     },
 
-        fetchConversations: () => {
+    fetchConversations: () => {
       dispatch(fetchConversations());
     },
-    markConversationAsRead: async (conversation)=>{
-     await dispatch(markConversationAsRead(conversation))
-    },
-    };
+    markConversationAsRead: async (conversation) => {
+      await dispatch(markConversationAsRead(conversation));
+    }
+  };
 };
 
 export default connect(null, mapDispatchToProps)(withStyles(styles)(Chat));

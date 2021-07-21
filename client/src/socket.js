@@ -4,7 +4,7 @@ import {
   setNewMessage,
   removeOfflineUser,
   addOnlineUser,
-  updateConversationAsSeen,
+  updateConversationAsSeen
 } from "./store/conversations";
 
 const socket = io(window.location.origin);
@@ -22,9 +22,9 @@ socket.on("connect", () => {
   socket.on("new-message", (data) => {
     store.dispatch(setNewMessage(data.message, data.sender));
   });
-  socket.on("seen" , (data)=>{
-    store.dispatch(updateConversationAsSeen(data.userId,data.conversationId))
-  })
+  socket.on("seen", (data) => {
+    store.dispatch(updateConversationAsSeen(data.userId, data.conversationId));
+  });
 });
 
 export default socket;

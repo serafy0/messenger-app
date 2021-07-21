@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { Conversation, Message } = require("../../db/models");
 const onlineUsers = require("../../onlineUsers");
-const {Op} = require("sequelize");
+const { Op } = require("sequelize");
 
 // expects {recipientId, text, conversationId } in body (conversationId will be null if no conversation exists yet)
 router.post("/", async (req, res, next) => {
@@ -14,16 +14,18 @@ router.post("/", async (req, res, next) => {
 
     // if we already know conversation id, we can save time and just add it to message and return
     if (conversationId) {
-
-      const existingConversation = await Conversation.findByPk(conversationId)
-      if(!existingConversation){
-        return res.sendStatus(404)
+      const existingConversation = await Conversation.findByPk(conversationId);
+      if (!existingConversation) {
+        return res.sendStatus(404);
       }
-      if (senderId !== existingConversation.user1Id && senderId !== existingConversation.user2Id) {
-        return res.sendStatus(403)
+      if (
+        senderId !== existingConversation.user1Id &&
+        senderId !== existingConversation.user2Id
+      ) {
+        return res.sendStatus(403);
       }
-      const message = await Message.create({senderId, text, conversationId});
-      return res.json({message, sender});
+      const message = await Message.create({ senderId, text, conversationId });
+      return res.json({ message, sender });
     }
     // if we don't have conversation id, find a conversation to make sure it doesn't already exist
     let conversation = await Conversation.findConversation(
@@ -35,7 +37,7 @@ router.post("/", async (req, res, next) => {
       // create conversation
       conversation = await Conversation.create({
         user1Id: senderId,
-        user2Id: recipientId,
+        user2Id: recipientId
       });
       if (onlineUsers.includes(sender.id)) {
         sender.online = true;
@@ -44,7 +46,7 @@ router.post("/", async (req, res, next) => {
     const message = await Message.create({
       senderId,
       text,
-      conversationId: conversation.id,
+      conversationId: conversation.id
     });
     res.json({ message, sender });
   } catch (error) {

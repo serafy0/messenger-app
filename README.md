@@ -12,7 +12,8 @@ CREATE DATABASE messenger;
 \q
 ```
 
-Update db.js to connect with your local PostgreSQL set up. The [Sequelize documentation](https://sequelize.org/master/manual/getting-started.html) can help with this.
+Update db.js to connect with your local PostgreSQL set up.
+The [Sequelize documentation](https://sequelize.org/master/manual/getting-started.html) can help with this.
 
 Create a .env file in the server directory and add your session secret (this can be any string):
 
