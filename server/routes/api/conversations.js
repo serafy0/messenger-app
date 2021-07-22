@@ -90,7 +90,7 @@ router.get("/", async (req, res, next) => {
             { conversationId: convoJSON.id }
           ]
         },
-        order: [["updatedAt", "DESC"]]
+        order: [["createdAt", "DESC"]]
       });
 
       if (lastMessageSeen) {
