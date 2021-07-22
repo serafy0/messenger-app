@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 const crypto = require("crypto");
+const { Op } = require("sequelize");
 
 const User = db.define("user", {
   username: {
@@ -36,6 +37,19 @@ const User = db.define("user", {
     }
   }
 });
+
+User.searchUsers = async function (userId, username) {
+  return await User.findAll({
+    where: {
+      username: {
+        [Op.substring]: username
+      },
+      id: {
+        [Op.not]: userId
+      }
+    }
+  });
+};
 
 User.prototype.correctPassword = function (password) {
   return User.encryptPassword(password, this.salt()) === this.password();
