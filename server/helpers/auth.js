@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../db/models/user");
 
-function authenticate(req, res, next) {
+function authentication(req, res, next) {
   const token = req.headers["x-access-token"];
   if (token) {
     jwt.verify(token, process.env.SESSION_SECRET, (err, decoded) => {
@@ -20,4 +20,4 @@ function authenticate(req, res, next) {
   }
 }
 
-module.exports = { authenticate };
+module.exports = { authentication };
