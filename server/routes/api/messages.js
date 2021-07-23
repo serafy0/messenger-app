@@ -39,7 +39,7 @@ router.post("/", async (req, res, next) => {
         user1Id: senderId,
         user2Id: recipientId
       });
-      if (onlineUsers[sender.id]) {
+      if (onlineUsers.get(sender.id)) {
         sender.online = true;
       }
     }
