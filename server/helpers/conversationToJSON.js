@@ -14,7 +14,7 @@ async function conversationToJSON(convo, userId) {
   }
 
   // set property for online status of the other user
-  convoJSON.otherUser.online = !!onlineUsers.includes(convoJSON.otherUser.id);
+  convoJSON.otherUser.online = !!onlineUsers.has(convoJSON.otherUser.id);
 
   // set properties for notification count and latest message preview
   convoJSON.latestMessageText = convoJSON.messages[0].text;
