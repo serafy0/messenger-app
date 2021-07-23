@@ -36,7 +36,7 @@ describe("POST /login", () => {
   });
 });
 
-describe(" POST /register", () => {
+describe("POST /register", () => {
   before(async () => {
     //This is sequelize syntax for postgres. You could just take your mongoose syntax here to delete all users
     await User.destroy({
