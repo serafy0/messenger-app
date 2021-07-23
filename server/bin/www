@@ -60,6 +60,7 @@ io.on("connection", (socket) => {
             // userIndex = onlineUsers.indexOf(id);
             onlineUsers.delete(id);
             socket.broadcast.emit("remove-offline-user", id);
+            socket.disconnect()
         }
     });
 });
