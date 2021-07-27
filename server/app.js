@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
+const helmet = require("helmet");
 const { join } = require("path");
 const logger = require("morgan");
 const session = require("express-session");
@@ -19,6 +20,7 @@ app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(express.static(join(__dirname, "public")));
 
+app.use(helmet());
 app.use(authentication);
 
 // require api routes here after I create them

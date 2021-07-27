@@ -37,12 +37,17 @@ const io = require("socket.io")(server, {
 io.use((socket, next) => socketAuth(socket, next))
 io.on("connection", (socket) => {
     socket.on("go-online", (id) => {
-        if (!onlineUsers.get(id)) {
+        if (!onlineUsers.has(id)) {
             onlineUsers.set(id, new Set([socket.id]));
-        } else {
+        } else if (!(onlineUsers.get(id).has(socket.id))) {
             onlineUsers.set(id, (onlineUsers.get(id)).add(socket.id))
         }
         socket.broadcast.emit("add-online-user", id);
+
+        socket.on('disconnect', function () {
+            onlineUsers.get(id).delete(socket.id)
+        });
+
     });
 
     socket.on("new-message", (data) => {
@@ -75,6 +80,8 @@ io.on("connection", (socket) => {
             socket.disconnect()
         }
     });
+
+
 });
 
 sessionStore
