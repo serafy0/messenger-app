@@ -11,6 +11,7 @@ const {app, sessionStore} = require("../app");
 const http = require("http");
 const db = require("../db");
 const onlineUsers = require("../onlineUsers");
+const {socketAuth} = require("../helpers/auth");
 
 /**
  * Get port from environment and store in Express.
@@ -33,6 +34,7 @@ const io = require("socket.io")(server, {
     cors: {origin: "http://localhost:3000"}
 });
 
+io.use((socket,next)=>socketAuth(socket,next))
 io.on("connection", (socket) => {
     socket.on("go-online", (id) => {
         if (!onlineUsers.get(id)) {
@@ -57,7 +59,6 @@ io.on("connection", (socket) => {
 
     socket.on("logout", (id) => {
         if (onlineUsers.get(id)) {
-            // userIndex = onlineUsers.indexOf(id);
             onlineUsers.delete(id);
             socket.broadcast.emit("remove-offline-user", id);
             socket.disconnect()

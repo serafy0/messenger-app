@@ -20,4 +20,20 @@ function authentication(req, res, next) {
   }
 }
 
-module.exports = { authentication };
+function socketAuth(socket, next) {
+  if (socket.handshake.auth && socket.handshake.auth.token) {
+    jwt.verify(
+      socket.handshake.auth.token,
+      process.env.SESSION_SECRET,
+      function (err, decoded) {
+        if (err) return next(new Error("Authentication error"));
+        socket.decoded = decoded;
+        next();
+      }
+    );
+  } else {
+    socket.disconnect();
+  }
+}
+
+module.exports = { authentication, socketAuth };

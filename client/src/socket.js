@@ -7,8 +7,11 @@ import {
   updateConversationAsSeen
 } from "./store/conversations";
 
-const socket = io(window.location.origin);
-
+const socket = io.connect("http://localhost:3000", {
+  auth: {
+    token: window.localStorage["messenger-token"]
+  }
+});
 socket.on("connect", () => {
   console.log("connected to server");
 
